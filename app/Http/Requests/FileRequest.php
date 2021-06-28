@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\IsNotExecutableFile;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FileRequest extends FormRequest
@@ -13,7 +14,7 @@ class FileRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,7 @@ class FileRequest extends FormRequest
     public function rules()
     {
         return [
-            "file" => "required|file|max:10240"
+            "file" => ["file", "max:10240", "required", new IsNotExecutableFile]
         ];
     }
 }
