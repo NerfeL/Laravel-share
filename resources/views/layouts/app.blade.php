@@ -74,27 +74,38 @@
                 </div>
             </div>
         </nav>
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-        @if(session('warning'))
-            <div class="alert alert-warning">
-                {{ session('warning') }}
-            </div>
-        @endif
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <main class="py-4">
-            @yield('content')
+            <div class="container">
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        {{ session('success') }}
+                    </div>
+                @endif
+                @if(session('warning'))
+                    <div class="alert alert-warning">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        {{ session('warning') }}
+                    </div>
+                @endif
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                @yield('content')
+            </div>
         </main>
     </div>
     <footer class="footer">
