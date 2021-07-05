@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Com\Tecnick\Barcode\Barcode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
 class HomeController extends Controller
 {
@@ -26,8 +28,24 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $files = $user->files;
+        $filesArray = Array();
 
-        return view('personal.disk', compact('files', 'user'));
+        foreach($files as $file) {
+
+            $barcode = new Barcode();
+            $url = URL::to($file->link);
+            $qrObj = $barcode->getBarcodeObj('QRCODE,H', $url,-6,-6, 'black', array(-2, -2, -2, -2))->setBackgroundColor('white');
+
+            $filesArray[] = [
+                "name" => $file->name,
+                "link" => $file->link,
+                "full_url" => $url,
+                "qr" => $qrObj,
+                "downloads" => $file->downloads
+            ];
+
+        }
+        return view('personal.disk', compact('filesArray', 'user'));
     }
 
 
