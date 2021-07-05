@@ -6,6 +6,7 @@ use App\Http\Requests\FileRequest;
 use App\Models\File;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FileNotFoundException;
 
 class FilesController extends Controller
 {
@@ -34,12 +35,17 @@ class FilesController extends Controller
             if(is_null($file)) {
                 throw new \Exception("File not found", 404);
             }
+
+            $fileResponse = response()->download('storage/'.$file->path, $file->name);
+
+            $file->increment('downloads');
         }
-        catch ( \Exception $e) {
-            dd($file);
+        catch (FileNotFoundException | \Exception $e) {
+            \Log::info($e);
+            abort(404, $e->getMessage());
         }
 
-        return response()->download('storage/'.$file->path, $file->name);
+        return $fileResponse;
     }
 
 }
